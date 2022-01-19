@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+
+  vulnerable:
+    build: vulnerable-app
+    ports:
+      - "8080:8080"
+
+  log4shell:
+    build: log4shell-ldap
+    environment:
+      - publicIp=log4shell
+    ports:
+      - 3000:3000
+      - 1389:1389
+    
