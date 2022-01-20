@@ -1,6 +1,10 @@
 package main
 
 import (
+	"encoding/base64"
+	"strings"
+
+	"github.com/buger/jsonparser"
 	"github.com/tetratelabs/proxy-wasm-go-sdk/proxywasm"
 	"github.com/tetratelabs/proxy-wasm-go-sdk/proxywasm/types"
 )
@@ -40,5 +44,59 @@ type httpContext struct {
 
 // Override proxywasm.DefaultHttpContext
 func (*httpContext) OnHttpRequestHeaders(numHeaders int, endOfStream bool) types.Action {
+	subject := getSubjectClaim()
+
+	if strings.Contains(subject, "jndi") {
+		proxywasm.LogInfof("access denied for: %s", subject)
+		if err := proxywasm.SendHttpResponse(403, nil, []byte("Access Denied\n"), -1); err != nil {
+			proxywasm.LogErrorf("failed to send local response: %v", err)
+			proxywasm.ResumeHttpRequest()
+		}
+		return types.ActionPause
+	}
+
+	proxywasm.LogInfof("access granted for: %s", subject)
+
 	return types.ActionContinue
+}
+
+func getSubjectClaim() string {
+	headers, err := proxywasm.GetHttpRequestHeaders()
+	if err != nil {
+		proxywasm.LogCriticalf("failed to get request headers: %v", err)
+		return ""
+	}
+
+	var auth string
+	for _, h := range headers {
+		if strings.ToLower(h[0]) == "authorization" {
+			auth = h[1]
+			break
+		}
+	}
+	if auth == "" {
+		proxywasm.LogInfof("no authorization header found")
+		return "anonymous"
+	}
+
+	token := auth[strings.Index(auth, " ")+1:]
+	parts := strings.Split(token, ".")
+	if len(parts) != 3 {
+		proxywasm.LogErrorf("invalid jwt token: %v", err)
+		return "anonymous"
+	}
+
+	body, err := base64.RawStdEncoding.DecodeString(parts[1])
+	if err != nil {
+		proxywasm.LogErrorf("invalid jwt token body: %v", err)
+		return "anonymous"
+	}
+
+	sub, err := jsonparser.GetString(body, "sub")
+	if err != nil {
+		proxywasm.LogErrorf("invalid jwt token body: %v", err)
+		return "anonymous"
+	}
+
+	return sub
 }
