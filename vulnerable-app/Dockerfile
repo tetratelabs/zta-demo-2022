@@ -2,6 +2,8 @@ FROM maven:3-jdk-8 as builder
 RUN mkdir /build/
 WORKDIR /build
 COPY ./ ./
+# predownlaod dependencies to favour docker caching
+RUN mvn verify
 RUN mvn clean compile assembly:single
 
 FROM openjdk:8u102-jdk

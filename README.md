@@ -8,7 +8,7 @@ demo presented at the NIST ZTA conference 2022.
 This demo contains three main applications:
 
 * [log4shell-ldap](log4shell-ldap): A malicious LDAP server that can be used to exploit the `Log4Shell` CVEs.
-* [vulnerable-app](vulnerable-app): Ana pplication that uses an old and unsecure Java runtime and a vulnerable
+* [vulnerable-app](vulnerable-app): An application that uses an old and unsecure Java runtime and a vulnerable
    version of the `log4j` library.
 * [wasm-patch](wasm-patch): An [Envoy](https://www.envoyproxy.io/) [WASM extension](https://github.com/proxy-wasm/spec) written
   in Go using the [proxy-wasm-go-sdk](https://github.com/tetratelabs/proxy-wasm-go-sdk) that inspects requests and

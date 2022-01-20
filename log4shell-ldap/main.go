@@ -29,7 +29,7 @@ const (
 )
 
 func main() {
-	flag.StringVar(&publicHost, "publicIp", os.Getenv("publicIp"), "Usage:$ log4shell-ldap --publicIp 192.168.1.1")
+	flag.StringVar(&publicHost, "publicIp", os.Getenv("publicIp"), "Usage:$ log4shell-ldap -publicIp 192.168.1.1")
 	flag.Parse()
 
 	ldapServer := startLdapServer()

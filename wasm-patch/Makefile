@@ -21,7 +21,7 @@ clean:
 	rm -f $(OUT)
 
 docker-build: $(OUT)
-	docker build --build-arg WASM_BINARY_PATH=$(OUT) -t $(HUB)/$(NAME):$(TAG) .
+	docker build --platform linux/amd64 --build-arg WASM_BINARY_PATH=$(OUT) -t $(HUB)/$(NAME):$(TAG) .
 
 docker-push:
 	docker push $(HUB)/$(NAME):$(TAG)
