@@ -1,0 +1,10 @@
+apiVersion: extensions.istio.io/v1alpha1
+kind: WasmPlugin
+metadata:
+  name: log4shell-patch
+  namespace: nist-demo-2022
+spec:
+  selector:
+    matchLabels:
+      language: java
+  url: oci://docker.io/nacx/log4shell-patch:0.1
