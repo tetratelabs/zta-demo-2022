@@ -5,7 +5,7 @@ services:
   vulnerable:
     build: vulnerable-app
     ports:
-      - "8080:8080"
+      - 8080:8080
 
   log4shell:
     build: log4shell-ldap
@@ -15,3 +15,11 @@ services:
       - 3000:3000
       - 1389:1389
     
+  envoy:
+    image: envoyproxy/envoy:v1.21.0
+    command: -c /opt/log4shell/envoy.yaml
+    ports:
+      - 8000:8000
+    volumes:
+      - "./wasm-patch/local-envoy.yaml:/opt/log4shell/envoy.yaml"
+      - "./wasm-patch/log4shell-patch.wasm:/opt/log4shell/log4shell-patch.wasm"

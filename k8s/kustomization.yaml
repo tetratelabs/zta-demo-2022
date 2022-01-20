@@ -1,0 +1,6 @@
+resources:
+  - namespace.yaml
+  - log4shell-ldap.yaml
+  - vulnerable-app.yaml
+
+namespace: nist-demo-2022

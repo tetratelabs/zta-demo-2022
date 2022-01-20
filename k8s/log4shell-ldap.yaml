@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: log4shell-ldap
+  labels:
+    app: log4shell-ldap
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+      name: http
+    - port: 1389
+      targetPort: 1389
+      name: ldap      
+  selector:
+    app: log4shell-ldap
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: log4shell-ldap
+  labels:
+    app: log4shell-ldap
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log4shell-ldap
+  labels:
+    app: log4shell-ldap
+spec:
+  selector:
+    matchLabels:
+      app: log4shell-ldap
+  template:
+    metadata:
+      labels:
+        app: log4shell-ldap
+    spec:
+      serviceAccountName: log4shell-ldap
+      containers:
+        - name: log4shell-ldap
+          image: gcr.io/ignasi-nist-2022/log4shell-ldap:0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+            - name: ldap
+              containerPort: 1389

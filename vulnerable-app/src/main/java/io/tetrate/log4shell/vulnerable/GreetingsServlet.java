@@ -25,6 +25,7 @@ public class GreetingsServlet extends HttpServlet {
         String token = getToken(request);
         String subject = getSubject(token);
 
+        // This is the  exploitable log line
         log.info("welcoming user: " + subject);
 
         response.setContentType("text/plain");

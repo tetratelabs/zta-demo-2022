@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vulnerable
+  labels:
+    app: vulnerable
+    langauge: java
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8000
+      name: http
+  selector:
+    app: vulnerable
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vulnerable
+  labels:
+    app: vulnerable
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vulnerable
+  labels:
+    app: vulnerable
+    langauge: java
+spec:
+  selector:
+    matchLabels:
+      app: vulnerable
+  template:
+    metadata:
+      labels:
+        app: vulnerable
+        langauge: java
+    spec:
+      serviceAccountName: vulnerable
+      containers:
+        - name: vulnerable
+          image: gcr.io/ignasi-nist-2022/vulnerable:0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
