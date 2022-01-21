@@ -1,9 +1,5 @@
 -include ../common.mk
 
-# Istio's WasmPlugin does not yet support imagePullSecrets
-# to pull images from private registries
-WASM_HUB := docker.io/nacx
-
 NAME := log4shell-patch
 WASM := $(NAME).wasm
 

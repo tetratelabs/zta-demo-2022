@@ -7,7 +7,7 @@ Instructions are a WIP
 * istioctl
 * envsubst
 * openssl
-* [kustomize](https://kustomize.io/) to deploy the applications in a Kubernetes cluster.
+* kustomize
 
 ## Deployment steps
 
