@@ -70,7 +70,7 @@ data:
               {
                 "authorization_uri": "${AUTH0_URL}/authorize",
                 "token_uri": "${AUTH0_URL}/oauth/token",
-                "callback_uri": "https://${DOMAIN}/oauth/callback",
+                "callback_uri": "https://${DOMAIN}${DOMAIN_PORT}/oauth/callback",
                 "jwks_fetcher": {
                   "jwks_uri": "${AUTH0_URL}/.well-known/jwks.json",
                   "periodic_fetch_interval_sec": 60
@@ -85,7 +85,7 @@ data:
                 },
                 "logout": {
                   "path": "/authservice_logout",
-                  "redirect_uri": "https://${DOMAIN}/logout"
+                  "redirect_uri": "https://${DOMAIN}${DOMAIN_PORT}/logout"
                 }
               }
             }

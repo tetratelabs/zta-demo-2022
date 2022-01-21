@@ -2,6 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: vulnerable
+  namespace: zta-demo
 spec:
   selector:
     istio: ingressgateway
@@ -14,15 +15,16 @@ spec:
       mode: SIMPLE
       credentialName: ingress-tls-cert
     hosts:
-    - "${DOMAIN}"
+    - "${INGRESS_HOST}"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: vulnerable
+  namespace: zta-demo
 spec:
   hosts:
-  - "${DOMAIN}"
+  - "${INGRESS_HOST}"
   gateways:
   - vulnerable
   http:

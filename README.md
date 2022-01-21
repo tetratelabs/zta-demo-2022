@@ -108,6 +108,7 @@ $ curl http://localhost:8000 -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciO
 Access Denied
 ```
 
-## NIST demo setup
+## Deploying to Kubernetes
 
-To replicate the NIST demo, follow the instructions in the [SETUP.md](SETUP.md) file.
+To replicate the NIST demo, follow the instructions in the [k8s folder](k8s/).
+

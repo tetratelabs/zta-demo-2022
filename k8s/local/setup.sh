@@ -19,6 +19,7 @@ openssl genrsa -out cert.key 2048
 openssl req -new -key cert.key -out cert.csr -subj "/C=US/ST=California/L=San Francisco/O=Tetrate/CN=${CN}"
 openssl x509 -req -extfile <(printf "subjectAltName=DNS:${CN}") -in cert.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out cert.crt -days ${DAYS} -sha256
 
-kubectl create -n istio-system secret tls ingress-tls-cert --key=cert.key --cert=cert.crt
+kubectl delete secret -n istio-system ingress-tls-cert --ignore-not-found
+kubectl create secret tls -n istio-system ingress-tls-cert --key=cert.key --cert=cert.crt
 
 popd

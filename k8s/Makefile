@@ -3,6 +3,7 @@ install/%:
 	istioctl install -y -f manifests/istio-operator.yaml
 	cd $(@F) && bash setup.sh
 	kustomize build manifests/ | envsubst | kubectl apply -f -
+	envsubst < manifests/vulnerable-app-ingress.yaml | kubectl apply -f -
 
 uninstall/%:
 	kubectl delete --ignore-not-found -f ../config/oidc-policy.yaml

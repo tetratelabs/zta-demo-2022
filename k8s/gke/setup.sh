@@ -17,6 +17,7 @@ gcloud iam service-accounts keys create /tmp/key.json \
 # Install cert-manager
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.yaml
 
+kubectl delete secret clouddns-dns01-solver-sa --ignore-not-found
 kubectl create secret generic clouddns-dns01-solver-sa \
     -n cert-manager \
     --from-file=/tmp/key.json

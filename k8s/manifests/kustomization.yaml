@@ -2,7 +2,6 @@ resources:
   - namespace.yaml
   - log4shell-ldap.yaml
   - vulnerable-app.yaml
-  - vulnerable-app-ingress.yaml
   - istio-authservice.yaml
 
 namespace: zta-demo
