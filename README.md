@@ -8,7 +8,7 @@ demo presented at the NIST ZTA conference 2022.
 This demo contains three main applications:
 
 * [log4shell-ldap](log4shell-ldap): A malicious LDAP server that can be used to exploit the `Log4Shell` CVEs.
-* [vulnerable-app](vulnerable-app): An application that uses an old and unsecure Java runtime and a vulnerable
+* [vulnerable-app](vulnerable-app): An application that uses an old and insecure Java runtime and a vulnerable
    version of the `log4j` library.
 * [wasm-patch](wasm-patch): An [Envoy](https://www.envoyproxy.io/) [WASM extension](https://github.com/proxy-wasm/spec) written
   in Go using the [proxy-wasm-go-sdk](https://github.com/tetratelabs/proxy-wasm-go-sdk) that inspects requests and
@@ -33,10 +33,10 @@ application logs the value of the `subject` claim in a JWT token, so if the mali
 ### Running applications locally
 
 The three applications can be easily run locally, although you won't be able to try all the [Istio](https://istio.io/)
-features showcased in the demo. However, it is enough to get eh applications running and to be able to play with them
+features showcased in the demo. However, it is enough to get the applications running and to be able to play with them
 and the WASM plugin.
 
-You can start he applications locally with:
+You can start the applications locally with:
 
 ```
 make -C wasm-patch clean compile  # docker-compose needs the WASM binary to have been compiled
@@ -44,12 +44,12 @@ docker-compose build
 docker-compose up
 ```
 
-This will build the necessary images and start all them. The vulnerable application is exposed as follows:
+This will build the necessary images and start all of them. The vulnerable application is exposed as follows:
 
-* `http://localhost:8080` - Direct access tot eh vulnerable application.
+* `http://localhost:8080` - Direct access to the vulnerable application.
 * `http://localhost:8000` - Access through Envoy, which includes filtering with the WASM plugin.
 
-To tst it, you can send a request to the application or Envoy proxy with a JWT Bearer token in the Authorization header.
+To test it, you can send a request to the application or Envoy proxy with a JWT Bearer token in the Authorization header.
 The contents of the "sub" claim in the provided token will trigger the attack vector, if present. For example:
 
 **Executing the requests directly against the vulnerable app**
