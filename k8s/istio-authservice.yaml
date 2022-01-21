@@ -11,6 +11,8 @@ spec:
       app: authservice
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
       labels:
         app: authservice
     spec:
@@ -65,7 +67,7 @@ data:
           "filters": [
           {
             "oidc":
-              {https://accounts.google.com/o/oauth2/v2/auth
+              {
                 "authorization_uri": "https://accounts.google.com/o/oauth2/v2/auth",
                 "token_uri": "https://oauth2.googleapis.com/token",
                 "callback_uri": "https://localhost:8443/oauth/callback",
