@@ -28,4 +28,10 @@ kustomize build k8s/ | envsubst | kubectl apply -f -
 # expose the vulnerable app in the Istio ingress
 bash istio/gen-certs.sh
 kubectl -n nist-demo-2022 apply -f istio/vulnerable-app.yaml
+
+# Enforce OIDC at the ingress level
+kubectl apply -f istio/oidc-policy.yaml
+
+# Install the WASM Plugin
+envsubst < istio/wasm-patch.yaml | kubectl apply -f -
 ```
