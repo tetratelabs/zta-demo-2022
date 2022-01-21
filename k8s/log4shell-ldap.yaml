@@ -11,7 +11,7 @@ spec:
       name: http
     - port: 1389
       targetPort: 1389
-      name: ldap      
+      name: tcp-ldap      
   selector:
     app: log4shell
 ---
@@ -40,13 +40,13 @@ spec:
       serviceAccountName: log4shell
       containers:
         - name: log4shell-ldap
-          image: gcr.io/ignasi-nist-2022/log4shell-ldap:0.1
-          imagePullPolicy: IfNotPresent
+          image: ${HUB}/log4shell-ldap:0.1
+          imagePullPolicy: Always
           env:
             - name: publicIp
               value: log4shell
           ports:
             - name: http
               containerPort: 3000
-            - name: ldap
+            - name: tcp-ldap
               containerPort: 1389

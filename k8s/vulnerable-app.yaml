@@ -8,7 +8,7 @@ metadata:
 spec:
   ports:
     - port: 8080
-      targetPort: 8000
+      targetPort: 8080
       name: http
   selector:
     app: vulnerable
@@ -33,6 +33,8 @@ spec:
       app: vulnerable
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/logLevel: "wasm:debug"
       labels:
         app: vulnerable
         language: java
@@ -40,8 +42,8 @@ spec:
       serviceAccountName: vulnerable
       containers:
         - name: vulnerable
-          image: gcr.io/ignasi-nist-2022/vulnerable:0.1
-          imagePullPolicy: IfNotPresent
+          image: ${HUB}/vulnerable:0.1
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8080

@@ -20,15 +20,6 @@ See the [hacking](#hacking) section for details about how to customize them.
 
 * [Go 1.17](https://go.dev/dl/) or higher.
 * [TinyGo](https://tinygo.org/) to compile and build the WASM plugin.
-* [kustomize](https://kustomize.io/) to deploy the applications in a Kubernetes cluster.
-
-## Deploying to Kubernetes
-
-The demo applications and services can be deployed to Kubernetes with `kustomize`:
-
-```
-kustomize build k8s/ | kubectl apply -f -
-```
 
 ## Hacking
 
@@ -116,3 +107,7 @@ Welcome, anonymous!
 $ curl http://localhost:8000 -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2NDI1ODI2MjIsImV4cCI6MTY3NDExODYyMiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoiJHtqbmRpOmxkYXA6Ly9sb2c0c2hlbGw6MTM4OS9leGVjL1kyRjBJQzlsZEdNdmNHRnpjM2RrQ2c9PX0ifQ.ktEyOh8O3QMH6amqZtPsYHjtDeFVXmgKHLt-s0t2ckw"
 Access Denied
 ```
+
+## NIST demo setup
+
+To replicate the NIST demo, follow the instructions in the [SETUP.md](SETUP.md) file.

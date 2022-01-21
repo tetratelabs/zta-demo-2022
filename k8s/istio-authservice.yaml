@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authservice
+  labels:
+    app: authservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authservice
+  template:
+    metadata:
+      labels:
+        app: authservice
+    spec:
+      volumes:
+        - name: authservice-config
+          configMap:
+            name: authservice
+      containers:
+      - name: authservice
+        image: ghcr.io/istio-ecosystem/authservice/authservice:0.5.0
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 10003
+        volumeMounts:
+          - name: authservice-config
+            mountPath: /etc/authservice
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 10004
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authservice
+  labels:
+    app: authservice
+spec:
+  ports:
+  - port: 10003
+    name: grpc
+  selector:
+    app: authservice
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: authservice
+data:
+  # We listen on 0.0.0.0 since Istio 1.10, it changes the sidecar configuration only support
+  # application listen on pod IP. See https://istio.io/latest/blog/2021/upcoming-networking-changes/
+  # for more details.
+  config.json: |
+    {
+      "listen_address": "0.0.0.0",
+      "listen_port": "10003",
+      "log_level": "trace",
+      "threads": 8,
+      "chains": [
+        {
+          "name": "idp_filter_chain",
+          "filters": [
+          {
+            "oidc":
+              {https://accounts.google.com/o/oauth2/v2/auth
+                "authorization_uri": "https://accounts.google.com/o/oauth2/v2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+                "callback_uri": "https://localhost:8443/oauth/callback",
+                "jwks_fetcher": {
+                  "jwks_uri": "https://www.googleapis.com/oauth2/v3/certs",
+                  "periodic_fetch_interval_sec": 60
+                },
+                "client_id": "${OIDC_CLIENT_ID}",
+                "client_secret": "${OIDC_CLIENT_SECRET}",
+                "scopes": [],
+                "cookie_name_prefix": "authservice",
+                "id_token": {
+                  "preamble": "Bearer",
+                  "header": "Authorization"
+                },
+                "logout": {
+                  "path": "/authservice_logout",
+                  "redirect_uri": "https://localhost:8443/logout"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }

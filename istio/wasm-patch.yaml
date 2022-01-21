@@ -7,4 +7,5 @@ spec:
   selector:
     matchLabels:
       language: java
-  url: oci://docker.io/nacx/log4shell-patch:0.1
+  url: oci://${WASM_HUB}/log4shell-patch:0.1
+  imagePullPolicy: Always
