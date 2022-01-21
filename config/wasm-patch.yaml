@@ -2,10 +2,10 @@ apiVersion: extensions.istio.io/v1alpha1
 kind: WasmPlugin
 metadata:
   name: log4shell-patch
-  namespace: nist-demo-2022
+  namespace: zta-demo
 spec:
   selector:
     matchLabels:
       language: java
-  url: oci://${WASM_HUB}/log4shell-patch:0.1
+  url: oci://${WASM_HUB}/log4shell-patch:${TAG}
   imagePullPolicy: Always

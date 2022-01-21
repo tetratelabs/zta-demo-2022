@@ -14,7 +14,7 @@ spec:
       mode: SIMPLE
       credentialName: ingress-tls-cert
     hosts:
-    - "*"
+    - "${DOMAIN}"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -22,7 +22,7 @@ metadata:
   name: vulnerable
 spec:
   hosts:
-  - "*"
+  - "${DOMAIN}"
   gateways:
   - vulnerable
   http:

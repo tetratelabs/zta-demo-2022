@@ -42,7 +42,7 @@ spec:
       serviceAccountName: vulnerable
       containers:
         - name: vulnerable
-          image: ${HUB}/vulnerable:0.1
+          image: ${HUB}/vulnerable:${TAG}
           imagePullPolicy: Always
           ports:
             - name: http

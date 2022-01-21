@@ -2,11 +2,13 @@ version: "3.9"
 
 services:
 
+  # vulnerable application exploitable with log4shell
   vulnerable:
     build: vulnerable-app
     ports:
       - 8080:8080
 
+  # malicious LDAP server providing log4shell exploits
   log4shell:
     build: log4shell-ldap
     environment:
@@ -15,6 +17,7 @@ services:
       - 3000:3000
       - 1389:1389
     
+  # Envoy proxy with the wasm-patch loaded to prevent log4shell attacks
   envoy:
     image: envoyproxy/envoy:v1.21.0
     command: -c /opt/log4shell/envoy.yaml

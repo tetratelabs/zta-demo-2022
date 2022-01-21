@@ -6,5 +6,5 @@ spec:
     extensionProviders:
     - name: "authservice-grpc"
       envoyExtAuthzGrpc:
-        service: "authservice.nist-demo-2022.svc.cluster.local"
+        service: "authservice.zta-demo.svc.cluster.local"
         port: "10003"

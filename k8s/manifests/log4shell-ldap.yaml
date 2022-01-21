@@ -40,7 +40,7 @@ spec:
       serviceAccountName: log4shell
       containers:
         - name: log4shell-ldap
-          image: ${HUB}/log4shell-ldap:0.1
+          image: ${HUB}/log4shell-ldap:${TAG}
           imagePullPolicy: Always
           env:
             - name: publicIp

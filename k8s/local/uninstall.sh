@@ -1,0 +1,1 @@
+kubectl delete secret ingress-tls-cert -n istio-system --ignore-not-found

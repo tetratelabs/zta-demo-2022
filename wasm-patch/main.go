@@ -44,7 +44,7 @@ type httpContext struct {
 
 // Override proxywasm.DefaultHttpContext
 func (*httpContext) OnHttpRequestHeaders(numHeaders int, endOfStream bool) types.Action {
-	subject := getSubjectClaim()
+	subject := getClaimValue("name")
 
 	if strings.Contains(subject, "jndi") {
 		proxywasm.LogInfof("access denied for: %s", subject)
@@ -60,7 +60,9 @@ func (*httpContext) OnHttpRequestHeaders(numHeaders int, endOfStream bool) types
 	return types.ActionContinue
 }
 
-func getSubjectClaim() string {
+// getClaimValue returns teh value of the given claim.
+// This method assumes the claim has a string value.
+func getClaimValue(claim string) string {
 	headers, err := proxywasm.GetHttpRequestHeaders()
 	if err != nil {
 		proxywasm.LogCriticalf("failed to get request headers: %v", err)
@@ -92,11 +94,11 @@ func getSubjectClaim() string {
 		return "anonymous"
 	}
 
-	sub, err := jsonparser.GetString(body, "sub")
+	res, err := jsonparser.GetString(body, claim)
 	if err != nil {
 		proxywasm.LogErrorf("invalid jwt token body: %v", err)
 		return "anonymous"
 	}
 
-	return sub
+	return res
 }

