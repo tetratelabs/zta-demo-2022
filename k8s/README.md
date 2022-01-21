@@ -11,6 +11,9 @@ Instructions to deploy the ZTA demo in a Kubernetes cluster.
 
 ## Deployment steps
 
+```
+source variables.env
+
 make install/gke
 make install/local
 
@@ -18,3 +21,4 @@ make uninstall/gke
 make uninstall/local
 
 kubectl run tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash
+```

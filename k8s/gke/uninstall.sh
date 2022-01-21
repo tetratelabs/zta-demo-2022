@@ -9,4 +9,4 @@ kubectl delete -f https://github.com/jetstack/cert-manager/releases/download/v1.
 
 kubectl delete namespace cert-manager --ignore-not-found
 
-#gcloud iam service-accounts delete dns01-solver@${PROJECT_ID}.iam.gserviceaccount.com --quiet
+gcloud iam service-accounts delete dns01-solver@${PROJECT_ID}.iam.gserviceaccount.com --quiet
