@@ -25,7 +25,7 @@ kubectl create secret generic clouddns-dns01-solver-sa \
 envsubst < external-dns.yaml | kubectl apply -n cert-manager -f -
 
 echo "Waiting a bit for cert-manager..."
-sleep 30
+sleep 60
 
 envsubst < issuer.yaml | kubectl apply -f -
 envsubst < certificate.yaml | kubectl apply -f -
