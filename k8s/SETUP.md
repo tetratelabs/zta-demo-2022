@@ -1,4 +1,4 @@
-# ZTA and DevSecOps for Cloud Native Applications demo
+# ZTA and DevSecOps for Cloud Native Applications demo setup
 
 The demo scenario is deployed on a GKE Kubernetes cluster and uses
 [Auth0](https://auth0.com/) as an OIDC Identity Provider. Follow these

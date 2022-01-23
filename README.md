@@ -108,7 +108,6 @@ $ curl http://localhost:8000 -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciO
 Access Denied
 ```
 
-## Deploying to Kubernetes
+## ZTA demo step by step
 
-To replicate the NIST demo, follow the instructions in the [k8s folder](k8s/).
-
+If you want to play with the demo, you can follow the step by step guide in the [DEMO.md](DEMO.md) file.
