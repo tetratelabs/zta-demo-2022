@@ -22,7 +22,7 @@ are rejected.
 ## Install the demo environment
 
 Before starting, install the demo environment following the instructions
-in the [k8s/SETUP.md](k8s/SETUP.md) file.
+in the [k8s/README.md](k8s/README.md) file.
 
 ## 1. Access the vulnerable application
 
