@@ -4,7 +4,7 @@ The following steps show how a Service Mesh can leverage the
 features of a Security Kernel suitable for a Zero Trust Architecture
 Platform. We will see:
 
-* How a service mesh leverages **runtime identities* to protect
+* How a service mesh leverages **runtime identities** to protect
   service-to-service communications.
 * How it can enforce **user identity based policies** and integrate with
   external or corporate Identity Providers.
