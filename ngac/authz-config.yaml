@@ -1,0 +1,9 @@
+resolvers:
+  principal:
+    - name: jwt_bearer
+      params:
+        subject-claim: "https://zta-demo/group"
+  operation:
+    - name: method
+  resource:
+    - name: request_path

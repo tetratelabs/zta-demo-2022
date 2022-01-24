@@ -1,0 +1,17 @@
+resources:
+  - namespace.yaml
+  - ngac-server.yaml
+  - ngac-authz.yaml
+
+namespace: ngac
+
+configMapGenerator:
+  - name: ngac-graph
+    files:
+      - graph.txt
+  - name: ngac-authz-config
+    files:
+      - resolver.yaml=authz-config.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true

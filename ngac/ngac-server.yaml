@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ngac-server
+  labels:
+    app: ngac-server
+spec:
+  ports:
+    - name: grpc-ngac
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: ngac-server
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ngac-server
+  labels:
+    app: ngac-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ngac-server
+  labels:
+    app: ngac-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ngac-server
+  template:
+    metadata:
+      labels:
+        app: ngac-server
+    spec:
+      serviceAccountName: ngac-server
+      containers:
+        - name: ngac-server
+          image: ${HUB}/ngac-server:nist-2022
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            tcpSocket:
+              port: 8080
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            httpGet:
+              path: /health
+              port: 8080
+          volumeMounts:
+            - mountPath: /etc/ngac/
+              name: graph
+          env:
+            - name: NGAC_ADDRESS
+              value: :8080
+            - name: NGAC_BACKEND
+              value: file
+            - name: NGAC_BACKEND_FILE_PATH
+              value: /etc/ngac/graph.txt
+            - name: NGAC_LOG_OUTPUT_LEVEL
+              value: pdp:debug
+      volumes:
+        - name: graph
+          configMap:
+            name: ngac-graph

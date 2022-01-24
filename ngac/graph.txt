@@ -1,0 +1,32 @@
+# Create a couple user nodes representing the gropus
+node U  Engineering
+node U  Admins
+node UA privileged
+node UA unprivileged
+node UA everyone
+assign Engineering  unprivileged
+assign Admins       privileged
+assign privileged   everyone
+assign unprivileged everyone
+
+# Model HTTP paths we want to enforce access to
+node O  /public
+node O  /private
+node OA protected
+node OA unprotected
+node OA /
+assign /public     unprotected
+assign /private    protected
+assign protected   /
+assign unprotected /
+
+# Create an "http" policy to enforce access from groups to the configured paths
+node PC http
+assign everyone http
+assign /        http
+
+# Configure permissions to each path:
+#  - Users from all groups can do requests to public paths
+#  - Only members of the "Admins" team can do post requests to the private paths
+assoc everyone   unprotected GET
+assoc privileged protected   GET

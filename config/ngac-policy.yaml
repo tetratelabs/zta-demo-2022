@@ -1,0 +1,16 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: ngac-authz
+  namespace: zta-demo
+spec:
+  selector:
+    matchLabels:
+      app: vulnerable
+  action: CUSTOM
+  provider:
+    name: ngac-grpc
+  rules:
+  - to:
+    - operation:
+        paths: ["/*"]

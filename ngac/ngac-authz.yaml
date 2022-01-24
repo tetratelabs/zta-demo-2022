@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ngac-authz
+  labels:
+    app: ngac-authz
+spec:
+  ports:
+    - name: grpc-ngac
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: ngac-authz
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ngac-authz
+  labels:
+    app: ngac-authz
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ngac-authz
+  labels:
+    app: ngac-authz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ngac-authz
+  template:
+    metadata:
+      labels:
+        app: ngac-authz
+    spec:
+      serviceAccountName: ngac-authz
+      containers:
+        - name: ngac-authz
+          image: ${HUB}/ngac-agent:nist-2022
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            tcpSocket:
+              port: 8080
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            httpGet:
+              path: /health
+              port: 8080
+          volumeMounts:
+            - mountPath: /etc/ngac
+              name: config
+          env:
+            - name: AGENT_ADDRESS
+              value: :8080
+            - name: AGENT_RESOLVER_CONFIG
+              value: /etc/ngac/resolver.yaml
+            - name: AGENT_LOG_OUTPUT_LEVEL
+              value: all:debug
+            - name: AGENT_PDP_URI
+              value: ngac-server:8080
+            - name: AGENT_PDP_DISABLE_TLS
+              value: "true"
+      volumes:
+        - name: config
+          configMap:
+            name: ngac-authz-config

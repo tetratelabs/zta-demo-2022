@@ -1,0 +1,14 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  profile: demo
+  meshConfig:
+    extensionProviders:
+    - name: "authservice-grpc"
+      envoyExtAuthzGrpc:
+        service: "authservice.zta-demo.svc.cluster.local"
+        port: "10003"
+    - name: "ngac-grpc"
+      envoyExtAuthzGrpc:
+        service: "ngac-authz.ngac.svc.cluster.local"
+        port: "8080"

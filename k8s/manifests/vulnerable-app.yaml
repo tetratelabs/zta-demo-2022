@@ -34,7 +34,7 @@ spec:
   template:
     metadata:
       annotations:
-        sidecar.istio.io/logLevel: "wasm:debug"
+        sidecar.istio.io/logLevel: "jwt:debug,ext_authz:debug,rbac:debug,wasm:debug"
       labels:
         app: vulnerable
         language: java
