@@ -68,6 +68,8 @@ configuration, do it as follows:
 make install/gke
 ```
 
+If the deployment fails because of a `cert-manager` webhook issue, just run the command again. It takes
+quites some time until cert-manager is fully functional.  
 Once the deployment completes you can open a browser to `https://<your app DNS name>`
 
 ### local mode

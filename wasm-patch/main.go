@@ -60,7 +60,7 @@ func (*httpContext) OnHttpRequestHeaders(numHeaders int, endOfStream bool) types
 	return types.ActionContinue
 }
 
-// getClaimValue returns teh value of the given claim.
+// getClaimValue returns the value of the given claim.
 // This method assumes the claim has a string value.
 func getClaimValue(claim string) string {
 	headers, err := proxywasm.GetHttpRequestHeaders()

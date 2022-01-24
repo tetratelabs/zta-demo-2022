@@ -3,10 +3,6 @@
 NAME := log4shell-patch
 WASM := $(NAME).wasm
 
-# Envoy >= 1.21.0 is required
-ENVOY_IMAGE := envoyproxy/envoy:v1.21.0
-
-OUT_DIR := build
 OUT := $(WASM)
 
 compile: $(OUT)
