@@ -36,6 +36,7 @@ Once the user has been configured with additional claims, let's deploy the NGAC 
 ```bash
 $ source ../k8s/variables.env
 $ make install
+$ kubectl apply -f ../config/ngac-policy.yaml
 ```
 
 Similar to the OIDC policy, iIf you inspect [the policy](../config/ngac-policy.yaml) file you'll see
