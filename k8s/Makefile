@@ -13,4 +13,5 @@ uninstall/%: unconfigure
 
 unconfigure:
 	kubectl delete --ignore-not-found -f ../config/oidc-policy.yaml
+	kubectl delete --ignore-not-found -f ../config/runtime-authn.yaml
 	envsubst < ../config/wasm-patch.yaml | kubectl delete --ignore-not-found -f -
