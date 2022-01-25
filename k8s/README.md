@@ -18,7 +18,7 @@ The following tools are required to build the environment:
 
 The demo can be deployed in two different ways depending on the infrastructure that is available:
 
-| Profile | Descrption |
+| Profile | Description |
 |---------|------------|
 | local   | Deploys everything on the GKE cluster and relies on Kubernetes port-forwarding to expose the Istio Ingress Gateway in `localhost`. |
 | gke | Uses `cert-manager` and `Google Cloud DNS` to configure the certificates and hostnames where the application will be exposed via the Istio Ingress Gateway. Requires a real DNS zone managed in the GKE project. |
@@ -69,7 +69,7 @@ $ make install/gke
 ```
 
 If the deployment fails because of a `cert-manager` webhook issue, just run the command again. It takes
-quites some time until cert-manager is fully functional.  
+quite some time until cert-manager is fully functional.  
 Once the deployment completes you can open a browser to `https://<your app DNS name>`
 
 ### local mode

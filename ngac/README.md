@@ -6,7 +6,7 @@ that based on some custom claims that are present in the JWT token of the authen
 ## Enabling custom claims in Auth0
 
 Before we begin, we need to configure Auth0 to include additional custom claims
-in the issued tokens. we can do that as follows in the Auth0 managament console:
+in the issued tokens. we can do that as follows in the Auth0 management console:
 
 * Go to the User, edit it, and add the following in the `user_metadata` field, then **Save**:
   ```json
