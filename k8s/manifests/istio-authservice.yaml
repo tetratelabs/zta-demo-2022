@@ -82,8 +82,8 @@ data:
                   "header": "Authorization"
                 },
                 "logout": {
-                  "path": "/authservice_logout",
-                  "redirect_uri": "https://${DOMAIN}${DOMAIN_PORT}/logout"
+                  "path": "/logout",
+                  "redirect_uri": "${AUTH0_URL}/v2/logout?client_id=${OIDC_CLIENT_ID}&returnTo=https://${DOMAIN}${DOMAIN_PORT}"
                 }
               }
             }

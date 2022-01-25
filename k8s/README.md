@@ -35,8 +35,8 @@ Follow these instructions to configure an application for the demo:
     * For the `local` profile: `https://localhost:8443/oauth/callback`
     * For the `gke` profile: `https://<desired app DNS name>/oauth/callback`
   * **Allowed Logout URLs:**
-    * For the `local` profile: `https://localhost:8443/logout`
-    * For the `gke` profile: `https://<desired app DNS name>/logout`
+    * For the `local` profile: `https://localhost:8443`
+    * For the `gke` profile: `https://<desired app DNS name>`
   * Scroll down to the **Advanced** section, and in the **OAuth** tag, make sure the
     **OIDC Conformant** option is enabled.
 * Go to **Users Management > Users > Create User**. Enter the requested data and **Create**.
