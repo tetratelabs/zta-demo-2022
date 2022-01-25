@@ -54,9 +54,9 @@ Once the file is there, you're ready to go!
 
 Before applying the Kubernetes manifest following the instructions below, build all the images:
 
-```
-source variables.env
-make -C ../ clean docker-build docker-push
+```bash
+$ source variables.env
+$ make -C ../ clean docker-build docker-push
 ```
 
 ### gke mode
@@ -64,8 +64,8 @@ make -C ../ clean docker-build docker-push
 To deploy the demo in `gke` mode and leverage automatic certificate issuance and DNS
 configuration, do it as follows:
 
-```
-make install/gke
+```bash
+$ make install/gke
 ```
 
 If the deployment fails because of a `cert-manager` webhook issue, just run the command again. It takes
@@ -77,9 +77,9 @@ Once the deployment completes you can open a browser to `https://<your app DNS n
 To deploy the demo in `local` mode, install the application as follows and expose the
 Istio ingress gateway locally:
 
-```
-make install/local
-kubectl -n istio-system port-forward svc/istio-ingressgateway 8443:443
+```bash
+$ make install/local
+$ kubectl -n istio-system port-forward svc/istio-ingressgateway 8443:443
 ```
 
 Once the deployment completes you can open a browser to `https://localhost:8443`
@@ -89,10 +89,12 @@ Once the deployment completes you can open a browser to `https://localhost:8443`
 To cleanup the environment and uninstall everything from the cluster, you can use
 the following commands, according to the mode you used in the installation process:
 
+```bash
+$ make uninstall/gke
 ```
-make uninstall/gke
-```
+
 or
-```
-make uninstall/local
+
+```bash
+$ make uninstall/local
 ```

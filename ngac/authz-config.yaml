@@ -2,6 +2,8 @@ resolvers:
   principal:
     - name: jwt_bearer
       params:
+        header: authorization
+        prefix: "Bearer "
         subject-claim: "https://zta-demo/group"
   operation:
     - name: method

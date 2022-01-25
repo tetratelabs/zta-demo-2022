@@ -38,7 +38,7 @@ spec:
       serviceAccountName: ngac-authz
       containers:
         - name: ngac-authz
-          image: ${HUB}/ngac-agent:nist-2022
+          image: docker.io/nacx/ngac-agent:nist-2022
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -62,7 +62,7 @@ spec:
             - name: AGENT_RESOLVER_CONFIG
               value: /etc/ngac/resolver.yaml
             - name: AGENT_LOG_OUTPUT_LEVEL
-              value: all:debug
+              value: pep:debug,pdp/audit:debug
             - name: AGENT_PDP_URI
               value: ngac-server:8080
             - name: AGENT_PDP_DISABLE_TLS
