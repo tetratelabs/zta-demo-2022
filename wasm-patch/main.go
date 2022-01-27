@@ -88,7 +88,7 @@ func getClaimValue(claim string) string {
 		return "anonymous"
 	}
 
-	body, err := base64.RawStdEncoding.DecodeString(parts[1])
+	body, err := base64.RawURLEncoding.DecodeString(parts[1])
 	if err != nil {
 		proxywasm.LogErrorf("invalid jwt token body: %v", err)
 		return "anonymous"
