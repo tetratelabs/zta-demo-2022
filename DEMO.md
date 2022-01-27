@@ -43,7 +43,8 @@ Accessing: /
 
 We don't want to allow unauthenticated users to access our application, so let's
 apply a policy that configures the ingress gateway to require authentication against
-the corporate identity Provider:
+the corporate Identity Provider. You can check the [OIDC configuration](k8s/manifests/istio-authservice.yaml)
+to see how the different URLs involved in the OpenID Connect protocol are configured.
 
 ```bash
 $ kubectl apply -f config/oidc-policy.yaml
