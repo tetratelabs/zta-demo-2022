@@ -20,6 +20,7 @@ See the [hacking](#hacking) section for details about how to customize them.
 
 * [Go 1.17](https://go.dev/dl/) or higher.
 * [TinyGo](https://tinygo.org/) to compile and build the WASM plugin.
+* [Docker](https://www.docker.com/) to create the Docker containers.
 
 ## Hacking
 
