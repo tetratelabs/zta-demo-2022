@@ -167,6 +167,14 @@ At this point, the vulnerable application has processed the malicious `${jndi:ld
 payload in the `name` claim of the JWT token, downloaded the exploit from `log4shell:1389`, and executed the `cat /etc/passwd` command
 that comes base64-encoded in the payload.
 
+We can further verify this by inspecting the application sidecar logs. There we can see the application doing an outbound
+call to download the exploit that will be executed:
+
+```bash
+$ kubectl -n zta-demo logs -l app=vulnerable -c istio-proxy | grep log4shell-exploit
+[2022-01-27T20:53:01.489Z] "GET /log4shell-exploit-1.0-SNAPSHOT.jar HTTP/1.1" 200 - via_upstream - "-" 0 3555 7 7 "-" "Java/1.8.0_102" "3c262a7d-a429-9665-a441-bf67c64488b3" "log4shell:3000" "10.88.1.75:3000" outbound|3000||log4shell.zta-demo.svc.cluster.local 10.88.0.145:48294 10.92.6.237:3000 10.88.0.145:56238 - default
+```
+
 To prevent this, we will deploy the [WASM patch](wasm-patch) to all the Java applications in the environment:
 
 ```bash
