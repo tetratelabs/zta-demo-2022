@@ -80,7 +80,7 @@ the ingress. We can check it by launching a new pod and accessing the app as fol
 
 ```bash
 $ kubectl run tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash
-bash-5.1# curl http://vulnerable:8080
+bash-5.1# curl http://vulnerable.zta-demo:8080
 Welcome, anonymous!
 Accessing: /
 bash-5.1# exit
@@ -101,7 +101,7 @@ We can now try to directly access the application again from inside the cluster:
 
 ```bash
 $ kubectl run tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash
-bash-5.1# curl http://vulnerable:8080
+bash-5.1# curl http://vulnerable.zta-demo:8080
 RBAC: access denied
 bash-5.1# exit
 ```
